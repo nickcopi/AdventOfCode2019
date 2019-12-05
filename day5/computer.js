@@ -1,6 +1,6 @@
 const fs = require('fs');
 const program = fs.readFileSync('input').toString().replace('\n','').split(',').map(instruction=>Number(instruction));
-const tape = [];
+const mainTape = [];
 const input = [1];
 const output = [];
 
@@ -22,6 +22,7 @@ class AddOpCode extends OpCode{
 		super(3);
 	}
 	use(inputs,tape){
+		console.log(inputs);
 		tape[inputs[2]] = inputs[0] + inputs[1];
 	}
 }
@@ -57,6 +58,7 @@ class HaltOpCode extends OpCode{
 		super(0);
 	}
 	use(inputs,tape){
+		console.log(output);
 		process.exit();
 	}
 }
@@ -95,9 +97,17 @@ const parseOpCode = opCode=>{
 
 let pointer = 0;
 while(pointer < program.length){
-	console.log('pointer: ' + pointer);
+	//console.log('pointer: ' + pointer);
 	const opCode = parseOpCode(program[pointer]);
-	console.log(opCode);
+	//console.log(opCode);
+	const codeInput = [];
+	opCode.argModes.forEach((mode,i,arr)=>{
+		if(i == arr.length-1) codeInput.push(program[pointer+i+1]);
+		if(mode) codeInput.push(program[pointer+i+1]);
+		else codeInput.push(program[program[pointer+i+1]]);
+	});
+	//console.log(codeInput);
+	opCodeLookup[opCode.code].use(codeInput,program);
 	pointer += opCodeLookup[opCode.code].argSize + 1;
 
 
