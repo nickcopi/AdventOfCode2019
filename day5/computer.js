@@ -166,13 +166,6 @@ while(pointer < program.length){
 	opCode.argModes.forEach((mode,i)=>{
 		codeInput.push(program[pointer +i +1]);
 	});
-	/*opCode.argModes.forEach((mode,i,arr)=>{
-		if(i == arr.length-1) codeInput.push(program[pointer+i+1]);
-		if(mode) codeInput.push(program[pointer+i+1]);
-		else codeInput.push(program[program[pointer+i+1]]);
-	});*/
-	//console.log(codeInput);
 	pointer = opCodeLookup[opCode.code].use(codeInput,program,pointer,opCode.argModes);
-	//pointer += opCodeLookup[opCode.code].argSize + 1;
 }
 
