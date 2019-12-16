@@ -21,7 +21,7 @@ class Node{
 const orbitMap = new Node('COM');
 
 const findNodeWithName = name=>{
-	let toVist = [orbitMap];
+	let toVisit = [orbitMap];
 	while(toVisit.length){
 		let node = toVisit.pop();
 		if(node.name === name) return node;
@@ -34,7 +34,7 @@ const findNodeWithName = name=>{
 
 const buildGraph = ()=>{
 	while(orbits.length){
-		console.log(orbits.length)
+		//console.log(orbits.length)
 		orbits = orbits.filter(orbit=>{
 			orbitArr = orbit.split(')');
 			if(existingNodes.includes(orbitArr[0])){
@@ -47,4 +47,5 @@ const buildGraph = ()=>{
 	}
 }
 buildGraph();
+fs.writeFileSync('orbitMap.json',JSON.stringify(orbitMap,null,2));
 console.log(orbitMap);
