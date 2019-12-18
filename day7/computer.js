@@ -53,7 +53,13 @@ class InputOpCode extends OpCode{
 		super(1);
 	}
 	use(inputs,tape,pointer,modes,input,output){
-		tape[inputs[0]] = input.shift();
+		let result = input.shift();
+		console.log('trying to get input');
+		while(result === undefined){
+			result = input.shift();
+		}
+		console.log('took input');
+		tape[inputs[0]] = result;
 		return this.adjustPointer(pointer);
 	}
 }
@@ -62,8 +68,12 @@ class OutputOpCode extends OpCode{
 	constructor(){
 		super(1);
 	}
-	use(inputs,tape,pointer,modes,input,output){
+	use(inputs,tape,pointer,modes,input,output,observers){
+		console.log(tape[inputs[0]]);
 		output.push(tape[inputs[0]])
+		observers.forEach(observer=>{
+			observer.addInput(tape[inputs[0]]);
+		});
 		return this.adjustPointer(pointer);
 	}
 }
@@ -167,15 +177,17 @@ class Computer{
 		this.input = input;
 		this.pointer = 0;
 		this.output = [];
+		this.observers = [];
 	}
-	run(){
+	async run(){
+		console.log('running');
 		while(this.pointer < this.program.length){
 			const opCode = parseOpCode(this.program[this.pointer]);
 			const codeInput = [];
 			opCode.argModes.forEach((mode,i)=>{
 				codeInput.push(this.program[this.pointer +i +1]);
 			});
-			this.pointer = opCodeLookup[opCode.code].use(codeInput,this.program,this.pointer,opCode.argModes,this.input,this.output);
+			this.pointer = opCodeLookup[opCode.code].use(codeInput,this.program,this.pointer,opCode.argModes,this.input,this.output,this.observers);
 		}
 		return this.output;
 	}
@@ -184,6 +196,10 @@ class Computer{
 	}
 	addInput(input){
 		this.input.push(input);
+		console.log('input added');
+	}
+	addObserver(observer){
+		this.observers.push(observer);
 	}
 
 }

@@ -12,11 +12,11 @@ const diffVals = (i,j,k,l,m)=>{
 		l !== m
 }
 
-for(let i = 0;i < 5;i++){
-	for(let j = 0;j<5;j++){
-		for(let k = 0;k<5;k++){
-			for(let l = 0;l<5;l++){
-				for(let m = 0;m<5;m++){
+for(let i = 5;i < 10;i++){
+	for(let j = 5;j<10;j++){
+		for(let k = 5;k<10;k++){
+			for(let l = 5;l<10;l++){
+				for(let m = 5;m<10;m++){
 					if(diffVals(i,j,k,l,m))
 						sequenceList.push(String(i) + String(j) + String(k) + String(l) + String(m));
 				}
@@ -30,14 +30,39 @@ const sorter = (a,b)=>{
 }
 
 //console.log(sequenceList);
-console.log(sequenceList.map(sequence=>{
-	let output = 0;
-	for(let i = 0;i<sequence.length;i++){
-		let computer = new Computer([...program],[Number(sequence[i]),output]);
-		output = computer.run()[0];
-	}
-	return{
-		sequence,
-		output
-	}
-}).sort(sorter));
+let init = async()=>{
+	console.log(sequenceList.map((sequence,j)=>{
+		//if(j) return;
+		let computers = [];
+		for(let i = 0;i<sequence.length;i++){
+			let computer = new Computer([...program],[Number(sequence[i])]);
+			computers.push(computer);
+			if(!i) computer.addInput(0);
+		}
+		computers.forEach((computer,i)=>{
+			if(i === computers.length-1)
+				computer.addObserver(computers[0]);
+			else computer.addObserver(computers[i+1]);
+		});
+		for(let i = 0; i < computers.length;i++){
+			new Promise((resolve,reject)=>{
+				computers[i].run();
+				resolve()
+			}).then(value=>value);
+		}
+		console.log('waiting for run end');
+		let stillBad = true;
+		while(stillBad){
+			stillBad = false;
+			computers.forEach(computer=>{
+				if(computer.pointer < program.length)
+					stillBad = true;
+			});
+		}
+		return{
+			sequence,
+			output
+		}
+	}).sort(sorter));
+}
+init();
