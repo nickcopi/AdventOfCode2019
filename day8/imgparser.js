@@ -1,4 +1,4 @@
-const input = require('./input');
+//const input = require('./input');
 const WIDTH = 25;
 const HEIGHT = 6;
 let img = input.match(/.{1,25}/g);
@@ -32,11 +32,11 @@ img.forEach((line,i)=>{
 	layers[layers.length-1].addLine(line);
 });
 //console.log(layers[0].countColor(0));
-layers = layers.map(layer=>{
+/*layers = layers.map(layer=>{
 	return {
 		zeroCount: layer.countColor(0),
 		oneTwoCount: layer.countColor(1) * layer.countColor(2),
 		layer
 	}
 });
-console.log(layers.sort(sortForZero));
+console.log(layers.sort(sortForZero));*/
