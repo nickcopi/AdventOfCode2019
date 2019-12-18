@@ -93,7 +93,8 @@ class HaltOpCode extends OpCode{
 	use(inputs,computer){
 		//console.log(output);
 		//process.exit();
-		return computer.program.length;
+		computer.halted = true;
+		return computer.pointer;
 	}
 }
 
@@ -193,9 +194,10 @@ class Computer{
 		this.base = 0;
 		this.output = [];
 		this.observers = [];
+		this.halted = false;
 	}
 	async run(){
-		while(this.pointer < this.program.length){
+		while(!this.halted){
 			const opCode = parseOpCode(this.program[this.pointer]);
 			const codeInput = [];
 			opCode.argModes.forEach((mode,i)=>{
