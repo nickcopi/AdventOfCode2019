@@ -1,3 +1,4 @@
+const readline = require('readline');
 class Pong{
 	constructor(){
 		this.output = [];
@@ -20,6 +21,10 @@ class Pong{
 		}
 	}
 	render(){
+		const blank = '\n'.repeat(process.stdout.rows)
+		console.log(blank)
+		readline.cursorTo(process.stdout, 0, 0)
+		readline.clearScreenDown(process.stdout)
 		this.grid.forEach(line=>{
 			let str = '';
 			line.forEach(tile=>{
@@ -28,6 +33,7 @@ class Pong{
 			console.log(str);
 		});
 		console.log(`Score: ${this.score}`);
+		this.output = [];
 	}
 	numToTile(num){
 		switch(num){

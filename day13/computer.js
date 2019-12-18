@@ -75,13 +75,15 @@ class InputOpCode extends OpCode{
 		super(1);
 	}
 	use(inputs,computer,modes){
-		//let result = computer.input.shift();
+		let result = computer.input.shift();
 		//let result = pong.getInput();
-		computer.halted = true;
-		return computer.pointer;
 		let input1 = readPtrWithMode(modes[0],inputs[0],computer);
 		//let input1 = inputs[0];
 		//if(modes[0] === 2) input1 += computer.base;
+		if(result === undefined){
+			computer.halted = true;
+			return computer.pointer;
+		}
 		/*while(result === undefined){
 			result = computer.input.shift();
 		}*/
