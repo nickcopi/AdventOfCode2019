@@ -17,13 +17,13 @@ class Moon{
 		this.accelerations = [];
 	}
 	getPotential(){
-		return Math.abs(this.position.x + this.position.y + this.position.z) 
+		return Math.abs(this.position.x) + Math.abs(this.position.y) + Math.abs(this.position.z); 
 	}
 	getKinetic(){
-		return Math.abs(this.velocity.x + this.velocity.y + this.velocity.z) 
+		return Math.abs(this.velocity.x) + Math.abs(this.velocity.y) + Math.abs(this.velocity.z);
 	}
 	getEnergy(){
-		return this.getPotential() + this.getKinetic();
+		return this.getPotential() * this.getKinetic();
 	}
 	bufferGravity(acceleration){
 		this.accelerations.push(acceleration);
@@ -33,6 +33,9 @@ class Moon{
 			this.velocity = addVector3(this.velocity,acceleration);
 		});
 		this.accelerations = [];
+	}
+	move(){
+		this.position = addVector3(this.position,this.velocity);
 	}
 }
 class MoonHandler{
@@ -48,11 +51,12 @@ class MoonHandler{
 	doStep(){
 		this.moons.forEach(moon=>{
 			this.moons.forEach(pair=>{
-				moon.bufferGravity(this.getGravity(moon,pair));
+				moon.bufferGravity(this.getGravity(moon.position,pair.position));
 			});
 		});
 		this.moons.forEach(moon=>{
 			moon.accelerate();
+			moon.move();
 		});
 	}
 	getGravity(moon1,moon2){
@@ -74,10 +78,20 @@ class MoonHandler{
 		else z = 0;
 		return {x,y,z};
 	}
+	getEnergy(){
+		let total = 0;
+		this.moons.forEach(moon=>{
+			total += moon.getEnergy();
+		});
+		return total;
+	}
 
 
 }
 
 
 const moonHandler = new MoonHandler(moons);
+for(let i = 0;i<1000;i++)
+	moonHandler.doStep();
 console.log(moonHandler.moons);
+console.log(moonHandler.getEnergy());
