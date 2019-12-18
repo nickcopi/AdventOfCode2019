@@ -4,5 +4,5 @@ const program = fs.readFileSync('input').toString().replace('\n','').split(',').
 //const program = '104,1125899906842624,99'.replace('\n','').split(',').map(instruction=>Number(instruction));
 
 
-const computer = new Computer([...program],[1]);
+const computer = new Computer([...program],[2]);
 console.log(computer.run());
