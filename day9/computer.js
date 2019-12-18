@@ -25,6 +25,15 @@ const readWithMode = (mode,input,computer)=>{
 			return dereference(computer.base + input,computer.program);
 	}
 }
+const readPtrWithMode = (mode,input,computer)=>{
+	switch(mode){
+		case 0:
+		case 1:
+			return input;
+		case 2:
+			return (computer.base + input);
+	}
+}
 
 class OpCode{
 	constructor(argSize){
@@ -42,7 +51,8 @@ class AddOpCode extends OpCode{
 	use(inputs,computer,modes){
 		let input1 = readWithMode(modes[0],inputs[0],computer);
 		let input2 = readWithMode(modes[1],inputs[1],computer);
-		computer.program[inputs[2]] = input1 + input2;
+		let input3 = readPtrWithMode(modes[2],inputs[2],computer);
+		computer.program[input3] = input1 + input2;
 		return this.adjustPointer(computer.pointer);
 	}
 }
@@ -53,7 +63,8 @@ class MultiplyOpCode extends OpCode{
 	use(inputs,computer,modes){
 		let input1 = readWithMode(modes[0],inputs[0],computer);
 		let input2 = readWithMode(modes[1],inputs[1],computer);
-		computer.program[inputs[2]] = input1 * input2;
+		let input3 = readPtrWithMode(modes[2],inputs[2],computer);
+		computer.program[input3] = input1 * input2;
 		return this.adjustPointer(computer.pointer);
 	}
 }
@@ -64,8 +75,8 @@ class InputOpCode extends OpCode{
 	}
 	use(inputs,computer,modes){
 		let result = computer.input.shift();
-		//let input1 = readWithMode(modes[0],inputs[0],computer);
-		let input1 = inputs[0];
+		let input1 = readPtrWithMode(modes[0],inputs[0],computer);
+		//let input1 = inputs[0];
 		//if(modes[0] === 2) input1 += computer.base;
 		/*while(result === undefined){
 			result = computer.input.shift();
@@ -133,7 +144,8 @@ class LessThanOpCode extends OpCode{
 	use(inputs,computer,modes){
 		let input1 = readWithMode(modes[0],inputs[0],computer);
 		let input2 = readWithMode(modes[1],inputs[1],computer);
-		computer.program[inputs[2]] = (input1 < input2)?1:0;
+		let input3 = readPtrWithMode(modes[2],inputs[2],computer);
+		computer.program[input3] = (input1 < input2)?1:0;
 		return this.adjustPointer(computer.pointer);
 	}
 }
@@ -144,7 +156,8 @@ class EqualsOpCode extends OpCode{
 	use(inputs,computer,modes){
 		let input1 = readWithMode(modes[0],inputs[0],computer);
 		let input2 = readWithMode(modes[1],inputs[1],computer);
-		computer.program[inputs[2]] = (input1 === input2)?1:0;
+		let input3 = readPtrWithMode(modes[2],inputs[2],computer);
+		computer.program[input3] = (input1 === input2)?1:0;
 		return this.adjustPointer(computer.pointer);
 	}
 }
