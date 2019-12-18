@@ -15,7 +15,7 @@ const output = [];
 
 const opCodeLookup = [];
 
-const readFromMode = (mode,input,computer)=>{
+const readWithMode = (mode,input,computer)=>{
 	switch(mode){
 		case 0:
 			return dereference(input,computer.program);
@@ -40,8 +40,8 @@ class AddOpCode extends OpCode{
 		super(3);
 	}
 	use(inputs,computer,modes){
-		let input1 = readFromMode(modes[0],inputs[0],computer);
-		let input2 = readFromMode(modes[1],inputs[1],computer);
+		let input1 = readWithMode(modes[0],inputs[0],computer);
+		let input2 = readWithMode(modes[1],inputs[1],computer);
 		computer.program[inputs[2]] = input1 + input2;
 		return this.adjustPointer(computer.pointer);
 	}
@@ -51,8 +51,8 @@ class MultiplyOpCode extends OpCode{
 		super(3);
 	}
 	use(inputs,computer,modes){
-		let input1 = readFromMode(modes[0],inputs[0],computer);
-		let input2 = readFromMode(modes[1],inputs[1],computer);
+		let input1 = readWithMode(modes[0],inputs[0],computer);
+		let input2 = readWithMode(modes[1],inputs[1],computer);
 		computer.program[inputs[2]] = input1 * input2;
 		return this.adjustPointer(computer.pointer);
 	}
@@ -64,7 +64,7 @@ class InputOpCode extends OpCode{
 	}
 	use(inputs,computer,modes){
 		let result = computer.input.shift();
-		//let input1 = readFromMode(modes[0],inputs[0],computer);
+		//let input1 = readWithMode(modes[0],inputs[0],computer);
 		let input1 = inputs[0];
 		//if(modes[0] === 2) input1 += computer.base;
 		/*while(result === undefined){
@@ -80,7 +80,7 @@ class OutputOpCode extends OpCode{
 		super(1);
 	}
 	use(inputs,computer,modes){
-		let input1 = readFromMode(modes[0],inputs[0],computer);
+		let input1 = readWithMode(modes[0],inputs[0],computer);
 		//console.log(computer.program[inputs[0]]);
 		computer.output.push(input1)
 		computer.observers.forEach(observer=>{
@@ -107,8 +107,8 @@ class JumpTrueOpCode extends OpCode{
 		super(2);
 	}
 	use(inputs,computer,modes){
-		let input1 = readFromMode(modes[0],inputs[0],computer);
-		let input2 = readFromMode(modes[1],inputs[1],computer);
+		let input1 = readWithMode(modes[0],inputs[0],computer);
+		let input2 = readWithMode(modes[1],inputs[1],computer);
 		if(input1) return input2;
 		return this.adjustPointer(computer.pointer);
 	}
@@ -119,8 +119,8 @@ class JumpFalseOpCode extends OpCode{
 		super(2);
 	}
 	use(inputs,computer,modes){
-		let input1 = readFromMode(modes[0],inputs[0],computer);
-		let input2 = readFromMode(modes[1],inputs[1],computer);
+		let input1 = readWithMode(modes[0],inputs[0],computer);
+		let input2 = readWithMode(modes[1],inputs[1],computer);
 		if(!input1) return input2;
 		return this.adjustPointer(computer.pointer);
 	}
@@ -131,8 +131,8 @@ class LessThanOpCode extends OpCode{
 		super(3);
 	}
 	use(inputs,computer,modes){
-		let input1 = readFromMode(modes[0],inputs[0],computer);
-		let input2 = readFromMode(modes[1],inputs[1],computer);
+		let input1 = readWithMode(modes[0],inputs[0],computer);
+		let input2 = readWithMode(modes[1],inputs[1],computer);
 		computer.program[inputs[2]] = (input1 < input2)?1:0;
 		return this.adjustPointer(computer.pointer);
 	}
@@ -142,8 +142,8 @@ class EqualsOpCode extends OpCode{
 		super(3);
 	}
 	use(inputs,computer,modes){
-		let input1 = readFromMode(modes[0],inputs[0],computer);
-		let input2 = readFromMode(modes[1],inputs[1],computer);
+		let input1 = readWithMode(modes[0],inputs[0],computer);
+		let input2 = readWithMode(modes[1],inputs[1],computer);
 		computer.program[inputs[2]] = (input1 === input2)?1:0;
 		return this.adjustPointer(computer.pointer);
 	}
@@ -153,7 +153,7 @@ class BaseOpCode extends OpCode{
 		super(1);
 	}
 	use(inputs,computer,modes){
-		let input1 = readFromMode(modes[0],inputs[0],computer);
+		let input1 = readWithMode(modes[0],inputs[0],computer);
 		computer.base += input1;
 		return this.adjustPointer(computer.pointer);
 	}
